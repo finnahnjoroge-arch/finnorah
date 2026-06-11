@@ -34,7 +34,7 @@ export function Navbar({
   return (
     <nav className={clsx("sticky top-0 z-50 shadow-sm", dark ? "bg-black" : "bg-white")}>
       {/* Main navbar */}
-      <div className={clsx("border-b px-3 py-2 lg:px-6 lg:py-3", dark ? "border-neutral-700" : "border-neutral-200")}>
+      <div className={clsx("px-3 pb-1 pt-2 lg:px-6 lg:pb-1.5 lg:pt-3", dark ? "border-neutral-700" : "border-neutral-200")}>
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 md:gap-4">
           {/* Left: Hamburger Menu + Logo */}
           <div className="flex items-center gap-1.5 md:gap-4">
@@ -87,7 +87,7 @@ export function Navbar({
 
         {/* Mobile search */}
         {!isProductPage && !isCheckout && (
-          <div className="mt-2 block border-t border-neutral-200 pt-2 md:hidden">
+          <div className="block md:hidden">
             <Suspense fallback={<SearchSkeleton />}>
               <Search />
             </Suspense>
@@ -97,9 +97,4 @@ export function Navbar({
     </nav>
   );
 }
-
-
-
-
-
 

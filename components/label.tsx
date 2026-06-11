@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { ReactNode } from "react";
 import Price from "./price";
 
 const Label = ({
@@ -6,32 +7,54 @@ const Label = ({
   amountMin,
   amountMax,
   currencyCode,
+  comparePrice,
   position = "bottom",
+  actions,
 }: {
   title: string;
   amountMin: string;
   amountMax: string;
   currencyCode: string;
+  comparePrice?: string;
   position?: "bottom" | "center";
+  actions?: ReactNode;
 }) => {
   const isRangePrice = amountMin !== amountMax;
+    const hasComparePrice = comparePrice && parseFloat(comparePrice) > parseFloat(amountMin);
+
   return (
     <div
       className={clsx(
-        "w-full bg-[#f7f7f7] px-3 pb-3 pt-2 sm:px-4 sm:pb-4 sm:pt-3",
+        "flex w-full flex-col bg-[#f7f7f7] px-3 pb-0 pt-2 sm:px-4 sm:pt-3",
       )}
     >
       {/* Product name - clearly visible */}
       <h3 className="line-clamp-2 text-sm font-semibold leading-tight text-neutral-800 sm:text-base">
         {title}
       </h3>
-      {/* Price - prominent and easy to scan */}
-      <Price
-        className="mt-1 text-base font-bold text-blue-600 sm:text-lg"
-        amount={amountMin}
-        prefix={isRangePrice ? "From " : ""}
-        currencyCode={currencyCode}
-      />
+      {/* Price row */}
+      <div className="mt-1 flex items-center gap-2">
+        <Price
+          className="text-base font-bold text-blue-600 sm:text-lg"
+          amount={amountMin}
+          prefix={isRangePrice ? "From " : ""}
+          currencyCode={currencyCode}
+        />
+                {hasComparePrice && (
+          <span className="text-xs text-neutral-400 line-through sm:text-sm">
+            <Price
+              className="text-xs text-neutral-400 line-through sm:text-sm"
+              amount={comparePrice!}
+              currencyCode={currencyCode}
+            />
+          </span>
+        )}
+      </div>
+      {actions && (
+        <div className="mt-2 -mx-3 flex items-stretch divide-x divide-white/30 overflow-hidden rounded-b-2xl sm:-mx-4">
+          {actions}
+        </div>
+      )}
     </div>
   );
 };

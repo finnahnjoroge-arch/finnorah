@@ -49,7 +49,34 @@ button:not([disabled]) {
     scrollbar-width: none;
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
+    .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-neutral-300, #d4d4d4) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: var(--color-neutral-300, #d4d4d4);
+  }
+
+  .dark .scrollbar-thin {
+    scrollbar-color: var(--color-neutral-600, #525252) transparent;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-neutral-600, #525252);
   }
 }

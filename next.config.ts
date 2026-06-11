@@ -7,6 +7,9 @@ export default {
     inlineCss: true,
     clientSegmentCache: true,
   },
+  turbopack: {
+    root: process.cwd(),
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -29,3 +32,4 @@ export default {
     ],
   },
 };
+

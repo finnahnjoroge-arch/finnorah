@@ -6,10 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { AutoLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import {
-    INSERT_ORDERED_LIST_COMMAND,
-    INSERT_UNORDERED_LIST_COMMAND,
-    ListItemNode,
-    ListNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+  ListItemNode,
+  ListNode,
 } from "@lexical/list";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -20,52 +20,52 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import {
-    $createHeadingNode,
-    $createQuoteNode,
-    HeadingNode,
-    HeadingTagType,
-    QuoteNode,
+  $createHeadingNode,
+  $createQuoteNode,
+  HeadingNode,
+  HeadingTagType,
+  QuoteNode,
 } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
 import {
-    $createParagraphNode,
-    $getNodeByKey,
-    $getRoot,
-    $getSelection,
-    $isRangeSelection,
-    DecoratorNode,
-    DOMConversionMap,
-    DOMExportOutput,
-    FORMAT_TEXT_COMMAND,
-    LexicalEditor,
-    NodeKey,
-    SerializedLexicalNode,
-    UNDO_COMMAND
+  $createParagraphNode,
+  $getNodeByKey,
+  $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  DecoratorNode,
+  DOMConversionMap,
+  DOMExportOutput,
+  FORMAT_TEXT_COMMAND,
+  LexicalEditor,
+  NodeKey,
+  SerializedLexicalNode,
+  UNDO_COMMAND
 } from "lexical";
 import {
-    AlignCenter,
-    AlignLeft,
-    AlignRight,
-    Bold,
-    Code2,
-    Eye,
-    Heading1,
-    Heading2,
-    Heading3,
-    Image as ImageIcon,
-    Italic,
-    Link,
-    List,
-    ListOrdered,
-    Pencil,
-    Pilcrow,
-    Quote,
-    Type,
-    Underline,
-    Undo2,
-    Upload,
-    Video,
-    X,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Code2,
+  Eye,
+  Heading1,
+  Heading2,
+  Heading3,
+  Image as ImageIcon,
+  Italic,
+  Link,
+  List,
+  ListOrdered,
+  Pencil,
+  Pilcrow,
+  Quote,
+  Type,
+  Underline,
+  Undo2,
+  Upload,
+  Video,
+  X,
 } from "lucide-react";
 import { ChangeEvent, ReactNode, useEffect, useRef, useState } from "react";
 
@@ -228,8 +228,8 @@ function ResizableImage({
           </button>
         </span>
       ) : null}
-      <span
-        className={`relative block w-fit max-w-full p-1 ${selected ? "border border-dashed border-blue-400" : "border border-transparent"}`}
+            <span
+        className={`relative block w-fit max-w-full ${selected ? "border border-dashed border-blue-400" : "border border-transparent"}`}
         style={alignmentStyle}
         onClick={() => setSelected(true)}
       >
@@ -241,21 +241,21 @@ function ResizableImage({
           style={width ? { width, height: "auto" } : undefined}
         />
         {selected ? (
-          <>
+                    <>
             <span
-              className="absolute -right-1 top-1/2 h-3 w-3 -translate-y-1/2 cursor-ew-resize rounded-full border border-white bg-blue-500 shadow"
+              className="absolute -right-1 top-1/2 h-2 w-2 -translate-y-1/2 cursor-ew-resize rounded-full border border-white bg-blue-500 shadow"
               onPointerDown={(event) => startResize("right", event)}
               onPointerMove={resizeImage}
               onPointerUp={stopResize}
             />
             <span
-              className="absolute bottom-0 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 cursor-ns-resize rounded-full border border-white bg-blue-500 shadow"
+              className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 cursor-ns-resize rounded-full border border-white bg-blue-500 shadow"
               onPointerDown={(event) => startResize("bottom", event)}
               onPointerMove={resizeImage}
               onPointerUp={stopResize}
             />
             <span
-              className="absolute -bottom-1 -right-1 h-3 w-3 cursor-nwse-resize rounded-full border border-white bg-blue-500 shadow"
+              className="absolute -bottom-1 -right-1 h-2 w-2 cursor-nwse-resize rounded-full border border-white bg-blue-500 shadow"
               onPointerDown={(event) => startResize("corner", event)}
               onPointerMove={resizeImage}
               onPointerUp={stopResize}
@@ -444,12 +444,9 @@ function $createVideoNode(src: string): VideoNode {
 function HtmlInitializer({ value }: { value: string }) {
   const [editor] = useLexicalComposerContext();
   const lastValue = useRef<string | null>(null);
-  const initialized = useRef(false);
 
   useEffect(() => {
-    if (initialized.current) return;
-    if (lastValue.current === value) return;
-    initialized.current = true;
+    if (!value || value === lastValue.current) return;
     lastValue.current = value;
 
     editor.update(() => {

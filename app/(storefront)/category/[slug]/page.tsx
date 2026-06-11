@@ -88,6 +88,7 @@ export default async function CategoryPage(props: {
           ) : (
             <>
               <Grid className="grid-cols-2 lg:grid-cols-6">
+
                 <ProductGridItems products={products} />
               </Grid>
               <Pagination page={page} totalPages={totalPages} />

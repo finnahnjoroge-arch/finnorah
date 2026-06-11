@@ -125,7 +125,13 @@ export default async function StorefrontLayout({
 
       <CartProvider>
         <div className="flex min-h-screen flex-col">
-          <AnnouncementBar />
+          {settings.announcementBar && settings.announcementText && (
+            <AnnouncementBar
+              text={settings.announcementText}
+              link={settings.announcementLink || undefined}
+              bgColor={settings.primaryColor}
+            />
+          )}
           <Navbar menu={menu} categories={categories} pages={footerMenu} settings={settings} />
                     <main className="flex-1 bg-neutral-50">
             {children}
@@ -138,3 +144,4 @@ export default async function StorefrontLayout({
     </>
   );
 }
+

@@ -16,6 +16,7 @@ import {
   Tv,
   Watch,
 } from "lucide-react";
+import { CategoryIcon } from "components/category-icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -86,7 +87,7 @@ export function CategoriesSidebar({ categories }: { categories: Category[] }) {
                     }`}
                   >
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-700">
-                      {cat.emoji || getIcon(cat.title)}
+                      <CategoryIcon value={cat.emoji} fallback={getIcon(cat.title)} iconClassName="text-current" />
                     </span>
                     <span className="flex-1 truncate">{cat.title}</span>
                   </Link>

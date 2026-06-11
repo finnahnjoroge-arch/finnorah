@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { CategoryIcon, getPastedIconValue } from "@/components/category-icon";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Check, ChevronDown, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, ClipboardEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 // ── Modal wrapper ──────────────────────────────────────────────────────────────
@@ -158,6 +159,7 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingIcon, setUploadingIcon] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>("");
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
@@ -263,6 +265,42 @@ export default function CategoriesPage() {
     }
   };
 
+  const handleIconPaste = (event: ClipboardEvent<HTMLTextAreaElement>) => {
+    const imageItem = Array.from(event.clipboardData.items).find((item) =>
+      item.type.startsWith("image/")
+    );
+
+    if (imageItem) {
+      const file = imageItem.getAsFile();
+      if (!file) return;
+
+      event.preventDefault();
+      setUploadingIcon(true);
+
+      const formData = new FormData();
+      formData.append("file", file, file.name || "category-icon.png");
+
+      fetch("/api/admin/upload", { method: "POST", body: formData })
+        .then(async (res) => {
+          const data = await res.json();
+          if (!res.ok || !data.url) throw new Error(data.error || "Upload failed");
+          setForm((prev) => ({ ...prev, emoji: data.url }));
+          toast.success("Icon uploaded");
+        })
+        .catch((error: any) => {
+          toast.error(error.message || "Failed to upload icon");
+        })
+        .finally(() => setUploadingIcon(false));
+      return;
+    }
+
+    const pastedIcon = getPastedIconValue(event);
+    if (!pastedIcon) return;
+
+    event.preventDefault();
+    setForm((prev) => ({ ...prev, emoji: pastedIcon }));
+  };
+
   const handleSubmit = async () => {
     const url = editingId ? `/api/admin/categories/${editingId}` : "/api/admin/categories";
 
@@ -348,7 +386,9 @@ export default function CategoriesPage() {
           {cat.image ? (
             <Image src={cat.image} alt={cat.name} fill className="object-cover" unoptimized />
           ) : cat.emoji ? (
-            <div className="flex h-full w-full items-center justify-center text-sm">{cat.emoji}</div>
+            <div className="flex h-full w-full items-center justify-center p-1 text-sm">
+              <CategoryIcon value={cat.emoji} iconClassName="text-sm" />
+            </div>
           ) : null}
         </div>
       </td>
@@ -496,17 +536,24 @@ export default function CategoriesPage() {
               <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">Icon</p>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded border border-neutral-200 bg-neutral-100 text-2xl dark:border-neutral-700 dark:bg-neutral-900">
-                    {form.emoji || <span className="text-[9px] uppercase tracking-wide text-neutral-400">No icon</span>}
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded border border-neutral-200 bg-neutral-100 p-2 text-2xl dark:border-neutral-700 dark:bg-neutral-900">
+                    <CategoryIcon
+                      value={form.emoji}
+                      fallback={<span className="text-center text-[9px] uppercase tracking-wide text-neutral-400">No icon</span>}
+                      iconClassName="text-2xl"
+                    />
                   </div>
                   <div className="flex-1">
-                    <Input
+                    <textarea
                       value={form.emoji}
                       onChange={(e) => setForm((p) => ({ ...p, emoji: e.target.value }))}
-                      placeholder="e.g. 🪴"
-                      maxLength={3}
-                      className="text-sm"
+                      onPaste={handleIconPaste}
+                      disabled={uploadingIcon}
+                      placeholder='Paste an icon image, image URL, SVG, or <i class="fi fi-rr-home"></i>'
+                      rows={3}
+                      className="flex min-h-[72px] w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 ring-offset-white placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300"
                     />
+                    {uploadingIcon && <p className="mt-1 text-xs text-neutral-500">Uploading pasted icon...</p>}
                   </div>
                 </div>
               </div>

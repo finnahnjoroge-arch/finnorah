@@ -41,7 +41,7 @@ export async function HeroBanner() {
   return (
     <section className="aspect-[16/9] sm:h-[280px] sm:aspect-auto lg:h-[392px]">
       <div
-        className="relative flex h-full flex-col items-center justify-center overflow-hidden rounded-sm px-5 py-8 text-center sm:rounded-sm sm:px-8 sm:py-14 md:px-10 md:py-18"
+        className="relative flex h-full flex-col items-center justify-center overflow-hidden sm:rounded-sm px-5 py-8 text-center sm:px-8 sm:py-14 md:px-10 md:py-18"
         style={{ backgroundColor: bgColor }}
       >
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-black/10" />
@@ -69,3 +69,5 @@ export async function HeroBanner() {
     </section>
   );
 }
+
+

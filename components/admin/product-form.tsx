@@ -1,6 +1,5 @@
 "use client";
 
-import ListingGenModal from "@/components/admin/listing-gen-modal";
 import RichTextEditor from "@/components/admin/rich-text-editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import clsx from "clsx";
-import { Camera, ChevronDown, Plus, Sparkles, Star, Upload, X } from "lucide-react";
+import { Camera, ChevronDown, Plus, Star, Upload, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -72,9 +71,10 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const [categorySearch, setCategorySearch] = useState("");
   const [categoryOpen, setCategoryOpen] = useState(false);
   const categoryRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("variable");
+  const [activeTab, setActiveTab] = useState("simple");
+
   const [form, setForm] = useState<ProductFormData>({
     name: "",
     slug: "",
@@ -97,12 +97,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const [attributes, setAttributes] = useState<{ name: string; values: string[] }[]>([]);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [skuManuallyEdited, setSkuManuallyEdited] = useState(false);
-  const [variantImageModal, setVariantImageModal] = useState<number | null>(null);
-  const [showListingGen, setShowListingGen] = useState(false);
-  const autoDraftId = useRef<string | null>(null);
-  const autoDraftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const autoDraftSaving = useRef(false);
-  const hasSubmitted = useRef(false);
+    const [variantImageModal, setVariantImageModal] = useState<number | null>(null);
 
   const filteredCategories = categories.filter((c) =>
     c.name.toLowerCase().includes(categorySearch.toLowerCase())
@@ -125,19 +120,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleKey);
     };
-  }, [categoryOpen]);
-
-  const handleListingInsert = (title: string, highlights: string, descriptionHtml: string) => {
-    setForm((prev) => ({
-      ...prev,
-      name: title,
-      productHighlights: highlights,
-      description: descriptionHtml,
-      slug: slugManuallyEdited ? prev.slug : generateSlug(title),
-      sku: skuManuallyEdited ? prev.sku : generateSKU(title),
-    }));
-    toast.success("Listing fields filled by AI");
-  };
+    }, [categoryOpen]);
 
   const generateSKU = (name: string) => {
     // Extract first letter of each of the first 4 words, pad with "X" if needed
@@ -203,21 +186,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
       .replace(/-+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-  const hasMeaningfulProductContent = () =>
-    Boolean(
-      form.name.trim() ||
-        form.description.trim() ||
-        form.productHighlights.trim() ||
-        form.sku.trim() ||
-        (Array.isArray(form.categories) && form.categories.length > 0) ||
-        form.images.length ||
-        form.price > 0 ||
-        form.comparePrice > 0 ||
-        form.cost > 0 ||
-        form.variants.length,
-    );
-
-  const buildPayload = (statusOverride?: ProductFormData["status"]) => {
+    const buildPayload = (statusOverride?: ProductFormData["status"]) => {
     const payload = {
       ...form,
       status: statusOverride || form.status,
@@ -226,38 +195,8 @@ export default function ProductForm({ productId }: { productId?: string }) {
     };
     // Remove old single-category field
     delete (payload as any).category;
-    return payload;
+        return payload;
   };
-
-  useEffect(() => {
-    if (productId || hasSubmitted.current || !hasMeaningfulProductContent()) return;
-    if (autoDraftTimer.current) clearTimeout(autoDraftTimer.current);
-
-    autoDraftTimer.current = setTimeout(async () => {
-      if (autoDraftSaving.current || hasSubmitted.current) return;
-      autoDraftSaving.current = true;
-
-      try {
-        const payload = buildPayload("draft");
-        const url = autoDraftId.current ? `/api/admin/products/${autoDraftId.current}` : "/api/admin/products";
-        const method = autoDraftId.current ? "PUT" : "POST";
-        const res = await fetch(url, {
-          method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json();
-        if (res.ok && data._id) autoDraftId.current = data._id.toString();
-      } catch {
-      } finally {
-        autoDraftSaving.current = false;
-      }
-    }, 1500);
-
-    return () => {
-      if (autoDraftTimer.current) clearTimeout(autoDraftTimer.current);
-    };
-  }, [form, activeTab, productId]);
 
   const handleNameChange = (name: string) => {
     setForm((prev) => ({
@@ -456,19 +395,14 @@ export default function ProductForm({ productId }: { productId?: string }) {
     }));
   };
 
-  const handleSubmit = async () => {
-    hasSubmitted.current = true;
-    if (autoDraftTimer.current) clearTimeout(autoDraftTimer.current);
+    const handleSubmit = async () => {
     setSaving(true);
     const payload = buildPayload();
 
-    const existingDraftId = autoDraftId.current;
     const url = productId
       ? `/api/admin/products/${productId}`
-      : existingDraftId
-        ? `/api/admin/products/${existingDraftId}`
-        : "/api/admin/products";
-    const method = productId || existingDraftId ? "PUT" : "POST";
+      : "/api/admin/products";
+    const method = productId ? "PUT" : "POST";
 
     const res = await fetch(url, {
       method,
@@ -493,21 +427,11 @@ export default function ProductForm({ productId }: { productId?: string }) {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as "simple" | "variable")}>
-        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <TabsList className="max-w-full">
             <TabsTrigger value="simple">Simple Product</TabsTrigger>
-            <TabsTrigger value="variable">Variable Product</TabsTrigger>
+                        <TabsTrigger value="variable">Variable Product</TabsTrigger>
           </TabsList>
-
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setShowListingGen(true)}
-            className="w-full border-amber-600/40 text-amber-700 hover:bg-amber-50 hover:text-amber-800 sm:w-auto dark:border-amber-500/30 dark:text-amber-400 dark:hover:bg-amber-950/30"
-          >
-            <Sparkles className="mr-2 h-4 w-4" />
-            Generate with AI
-          </Button>
         </div>
 
         <TabsContent value="simple" className="space-y-4">
@@ -519,16 +443,43 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <div className="relative" ref={categoryRef}>
-                <Input
-                  placeholder="Search categories..."
-                  value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
-                  onFocus={() => setCategoryOpen(true)}
-                  className="dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700"
-                />
+                                                        <div className="relative" ref={categoryRef}>
+                <div className="flex flex-wrap items-center gap-2 rounded-md border border-neutral-200 bg-white p-1.5 min-h-[38px] dark:border-neutral-700 dark:bg-neutral-900 focus-within:ring-2 focus-within:ring-neutral-950 focus-within:ring-offset-2">
+                  {/* Display selected categories as badges */}
+                  {form.categories.map((categoryId) => {
+                    const category = categories.find((c) => c._id === categoryId);
+                    return category ? (
+                      <Badge
+                        key={categoryId}
+                        variant="secondary"
+                        className="flex items-center gap-1 pr-1 cursor-pointer"
+                        onClick={() => {
+                          setForm((p) => ({
+                            ...p,
+                            categories: p.categories.filter((id) => id !== categoryId),
+                          }));
+                        }}
+                      >
+                        {category.name}
+                        <button
+                          type="button"
+                          className="rounded-full p-0.5 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ) : null;
+                  })}
+                  <input
+                    placeholder="Search categories..."
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    onFocus={() => setCategoryOpen(true)}
+                    className="flex-1 min-w-[80px] bg-transparent outline-none border-none text-sm text-neutral-900 placeholder:text-neutral-500 dark:text-neutral-100 dark:placeholder:text-neutral-400 px-1 h-7"
+                  />
+                </div>
                 {categoryOpen && (
-                  <div className="absolute z-50 mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800 max-h-[220px] overflow-y-auto">
+                  <div className="scrollbar-thin absolute left-0 top-full z-50 mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800 max-h-[220px] overflow-y-auto py-1">
                     {filteredCategories.length === 0 ? (
                       <div className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-500">No categories found</div>
                     ) : (
@@ -556,16 +507,13 @@ export default function ProductForm({ productId }: { productId?: string }) {
                           }`}
                         >
                           {c.name}
-                          {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
-                            <span className="ml-2 text-blue-500">✓</span>
-                          )}
                         </button>
                       ))
                     )}
                   </div>
                 )}
-              </div>
-          </div>
+                            </div>
+            </div>
           </div>
 
           {/* Images */}
@@ -607,12 +555,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
           </div>
 
-          {/* Stock */}
-          <div className="space-y-2">
-            <Label>Stock</Label>
-            <Input type="number" value={form.stock} onChange={(e) => setForm((p) => ({ ...p, stock: Number(e.target.value) }))} />
-          </div>
-
           {/* Advanced Settings */}
           <Collapsible>
             <CollapsibleTrigger asChild>
@@ -621,8 +563,12 @@ export default function ProductForm({ productId }: { productId?: string }) {
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-4 pt-4">
+                        <CollapsibleContent className="space-y-4 pt-4">
               <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Stock</Label>
+                  <Input type="number" value={form.stock} onChange={(e) => setForm((p) => ({ ...p, stock: Number(e.target.value) }))} />
+                </div>
                 <div className="space-y-2">
                   <Label>Cost</Label>
                   <Input type="number" value={form.cost} onChange={(e) => setForm((p) => ({ ...p, cost: Number(e.target.value) }))} />
@@ -666,16 +612,43 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <div className="relative" ref={categoryRef}>
-                <Input
-                  placeholder="Search categories..."
-                  value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
-                  onFocus={() => setCategoryOpen(true)}
-                  className="dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700"
-                />
+                                                        <div className="relative" ref={categoryRef}>
+                <div className="flex flex-wrap items-center gap-2 rounded-md border border-neutral-200 bg-white p-1.5 min-h-[38px] dark:border-neutral-700 dark:bg-neutral-900 focus-within:ring-2 focus-within:ring-neutral-950 focus-within:ring-offset-2">
+                  {/* Display selected categories as badges */}
+                  {form.categories.map((categoryId) => {
+                    const category = categories.find((c) => c._id === categoryId);
+                    return category ? (
+                      <Badge
+                        key={categoryId}
+                        variant="secondary"
+                        className="flex items-center gap-1 pr-1 cursor-pointer"
+                        onClick={() => {
+                          setForm((p) => ({
+                            ...p,
+                            categories: p.categories.filter((id) => id !== categoryId),
+                          }));
+                        }}
+                      >
+                        {category.name}
+                        <button
+                          type="button"
+                          className="rounded-full p-0.5 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ) : null;
+                  })}
+                  <input
+                    placeholder="Search categories..."
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    onFocus={() => setCategoryOpen(true)}
+                    className="flex-1 min-w-[80px] bg-transparent outline-none border-none text-sm text-neutral-900 placeholder:text-neutral-500 dark:text-neutral-100 dark:placeholder:text-neutral-400 px-1 h-7"
+                  />
+                </div>
                 {categoryOpen && (
-                  <div className="absolute z-50 mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800 max-h-[220px] overflow-y-auto">
+                  <div className="scrollbar-thin absolute left-0 top-full z-50 mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800 max-h-[220px] overflow-y-auto py-1">
                     {filteredCategories.length === 0 ? (
                       <div className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-500">No categories found</div>
                     ) : (
@@ -703,16 +676,13 @@ export default function ProductForm({ productId }: { productId?: string }) {
                           }`}
                         >
                           {c.name}
-                          {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
-                            <span className="ml-2 text-blue-500">✓</span>
-                          )}
                         </button>
                       ))
                     )}
                   </div>
                 )}
-              </div>
-          </div>
+                            </div>
+            </div>
           </div>
 
           {/* Images */}
@@ -998,7 +968,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         </TabsContent>
       </Tabs>
 
-      <div className="flex gap-3">
+            <div className="flex gap-3">
         <Button onClick={handleSubmit} disabled={saving}>
           {saving ? "Saving..." : productId ? "Update Product" : "Create Product"}
         </Button>
@@ -1006,12 +976,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
           Cancel
         </Button>
       </div>
-
-      <ListingGenModal
-        open={showListingGen}
-        onOpenChange={setShowListingGen}
-        onInsert={handleListingInsert}
-      />
     </div>
   );
 }

@@ -24,7 +24,7 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
   if (images.length === 0) return null;
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-sm bg-transparent shadow-sm sm:rounded-sm sm:shadow-md">
+    <div className="relative h-full w-full overflow-hidden bg-transparent shadow-sm sm:rounded-sm sm:shadow-md">
       <div
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${activeIndex * 100}%)` }}
@@ -36,7 +36,7 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
               alt={`Hero banner ${index + 1}`}
               fill
               className="object-cover object-center"
-              sizes="(min-width: 1280px) 1280px, calc(100vw - 1.5rem)"
+              sizes="100vw"
               quality={100}
               priority={index === 0}
             />
@@ -61,3 +61,5 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
     </div>
   );
 }
+
+

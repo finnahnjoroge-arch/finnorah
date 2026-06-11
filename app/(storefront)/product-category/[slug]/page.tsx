@@ -56,7 +56,11 @@ export default async function ProductCategoryPage(props: {
   const sort = (searchParams?.sort as string) || undefined;
   const pageParam = searchParams?.page;
   const page = typeof pageParam === "string" ? parseInt(pageParam, 10) || 1 : 1;
-  const [collection, { products, totalPages }] = await Promise.all([
+
+
+
+
+        const [collection, { products, totalPages }] = await Promise.all([
     getCollection(params.slug),
     getCollectionProducts({
       collection: params.slug,

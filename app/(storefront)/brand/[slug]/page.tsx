@@ -51,7 +51,20 @@ export default async function BrandPage(props: {
   const pageParam = searchParams?.page;
   const page = typeof pageParam === "string" ? parseInt(pageParam, 10) || 1 : 1;
 
-  const brand = await getBrandBySlug(params.slug);
+
+
+
+
+
+
+
+
+
+
+
+
+
+      const brand = await getBrandBySlug(params.slug);
   if (!brand) notFound();
 
   const [collections, { products, totalPages }] = await Promise.all([
@@ -72,6 +85,8 @@ export default async function BrandPage(props: {
       {products.length > 0 ? (
         <>
           <Grid className="grid-cols-2 lg:grid-cols-6">
+
+
             <ProductGridItems products={products} />
           </Grid>
           <Pagination page={page} totalPages={totalPages} />

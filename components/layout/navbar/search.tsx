@@ -81,17 +81,17 @@ export default function Search() {
         <input
           type="text"
           name="q"
-          placeholder="Search products, brands..."
+          placeholder="Search products, categories..."
           autoComplete="off"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
             setOpen(true);
           }}
-          className="w-full rounded-full border border-neutral-300 bg-white px-3 py-2 pr-10 text-sm text-neutral-900 placeholder:text-neutral-500 transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 md:px-4 md:py-2.5 md:pr-12"
-        />
-        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-neutral-100 p-1.5 md:p-2">
-          <MagnifyingGlassIcon className="h-4 w-4 text-neutral-600" />
+          className="w-full rounded-full border border-neutral-300 bg-neutral-100 px-3 py-2 pr-10 text-sm text-neutral-900 placeholder:text-neutral-500 transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 md:px-4 md:py-2.5 md:pr-12"
+                  />
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-blue-600 p-1.5 md:p-2">
+                    <MagnifyingGlassIcon className="h-4 w-4 text-white" />
         </div>
       </div>
       {open && query.trim().length >= 2 ? (
@@ -158,11 +158,11 @@ export function SearchSkeleton() {
     <form className="w-max-[550px] relative w-full lg:w-80 xl:w-full">
       <div className="relative flex items-center">
         <input
-          placeholder="Search products, brands..."
-          className="w-full rounded-full border border-neutral-300 bg-white px-3 py-2 pr-10 text-sm text-neutral-900 placeholder:text-neutral-500 md:px-4 md:py-2.5 md:pr-12"
+                    placeholder="Search products, categories..."
+          className="w-full rounded-full border border-neutral-300 bg-neutral-100 px-3 py-2 pr-10 text-sm text-neutral-900 placeholder:text-neutral-500 md:px-4 md:py-2.5 md:pr-12"
         />
-        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-neutral-100 p-1.5 md:p-2">
-          <MagnifyingGlassIcon className="h-4 w-4 text-neutral-600" />
+        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-blue-600 p-1.5 md:p-2">
+          <MagnifyingGlassIcon className="h-4 w-4 text-white" />
         </div>
       </div>
     </form>

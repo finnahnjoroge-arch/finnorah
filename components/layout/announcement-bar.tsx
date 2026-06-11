@@ -1,29 +1,46 @@
-import { getStoreSettings } from "lib/storefront/settings";
+"use client";
+
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useState } from "react";
 
-export async function AnnouncementBar() {
-  const settings = await getStoreSettings();
+interface AnnouncementBarProps {
+  text: string;
+  link?: string;
+  bgColor?: string;
+}
 
-  if (!settings.announcementBar || !settings.announcementText) {
-    return null;
-  }
+export function AnnouncementBar({ text, link, bgColor }: AnnouncementBarProps) {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible || !text) return null;
 
   const content = (
     <div
-      className="w-full py-1.5 text-center text-xs font-medium text-white"
-      style={{ backgroundColor: settings.primaryColor }}
+      className="relative flex w-full items-center justify-center py-2 pr-10 pl-4 text-sm font-medium text-white sm:text-base"
+      style={{ backgroundColor: bgColor || "#2563eb" }}
     >
-      {settings.announcementText}
+      <span className="text-center">{text}</span>
+      <button
+        onClick={() => setVisible(false)}
+        aria-label="Close announcement"
+        className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full p-1 text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+      >
+        <XMarkIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+      </button>
     </div>
   );
 
-  if (settings.announcementLink) {
+  if (link) {
     return (
-      <Link href={settings.announcementLink} className="block w-full hover:opacity-90">
+      <div className="relative">
+        <Link href={link} className="block w-full hover:opacity-90">
         {content}
-      </Link>
+        </Link>
+      </div>
     );
   }
 
   return content;
 }
+

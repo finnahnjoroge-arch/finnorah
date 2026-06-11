@@ -134,8 +134,8 @@ export function ProductActions({
         )}
       </div>
 
-      {/* Trust badges */}
-      <div className="mt-2 space-y-1 md:mt-8 md:space-y-1.5">
+            {/* Trust badges */}
+      <div className="mt-2 space-y-1 md:mt-8 md:space-y-1.5 md:mb-0 mb-16">
         <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-2.5 py-2">
           <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
             <BanknotesIcon className="h-3 w-3" />
@@ -151,16 +151,16 @@ export function ProductActions({
           </div>
           <div>
             <p className="text-xs font-semibold text-blue-800">Cheap Delivery Rates</p>
-            <p className="text-[11px] text-blue-700/80">KES 190 parcels · KES 250 Nairobi · FREE CBD</p>
+            <p className="text-[11px] text-blue-700/80">Trusted Couriers: G4S | Wells Fargo | Speedaf</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-2.5 py-2">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700">
+                <div className="flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-100 px-2.5 py-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-700">
             <MapPinIcon className="h-3 w-3" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-neutral-800">Fast Local Shipping</p>
-            <p className="text-[11px] text-neutral-600">Delivered within Nairobi & across Kenya</p>
+            <p className="text-xs font-semibold text-slate-800">Fast Local Shipping</p>
+            <p className="text-[11px] text-slate-600">Delivered within Nairobi & across Kenya</p>
           </div>
         </div>
       </div>

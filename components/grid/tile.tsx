@@ -6,6 +6,8 @@ export function GridTileImage({
   isInteractive = true,
   active,
   label,
+  labelActions,
+  comparePrice,
   ...props
 }: {
   isInteractive?: boolean;
@@ -17,7 +19,13 @@ export function GridTileImage({
     currencyCode: string;
     position?: "bottom" | "center";
   };
+  labelActions?: React.ReactNode;
+  comparePrice?: string;
 } & React.ComponentProps<typeof Image>) {
+  const hasCompare = comparePrice && label && parseFloat(comparePrice) > parseFloat(label.amountMin);
+  const pctOff = hasCompare
+    ? Math.round((1 - parseFloat(label!.amountMin) / parseFloat(comparePrice!)) * 100)
+    : 0;
   return (
     <div
       className={clsx(
@@ -44,19 +52,26 @@ export function GridTileImage({
           <div className="flex h-full w-full items-center justify-center bg-white">
             <div className="text-neutral-300 text-sm">No image</div>
           </div>
+                )}
+              {/* Percentage off badge - top left */}
+        {hasCompare && (
+          <div className="absolute top-2 left-2 z-10 rounded bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white shadow sm:px-2 sm:text-xs">
+            -{pctOff}%
+          </div>
         )}
       </div>
-      {/* Subtle divider */}
-      <div className="h-px bg-neutral-100" />
       {label ? (
         <Label
           title={label.title}
           amountMin={label.amountMin}
           amountMax={label.amountMax}
           currencyCode={label.currencyCode}
+          comparePrice={comparePrice}
           position={label.position}
+          actions={labelActions}
         />
       ) : null}
     </div>
   );
 }
+

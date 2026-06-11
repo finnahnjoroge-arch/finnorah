@@ -2,6 +2,7 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
+import { CategoryIcon } from "components/category-icon";
 import { Collection, Menu } from "lib/sfcc/types";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import Image from "next/image";
@@ -148,7 +149,7 @@ export default function MenuDrawer({
                             <div className="flex flex-1 items-center gap-3 px-4 py-3.5">
                               {category.emoji ? (
                                 <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-sm">
-                                  {category.emoji}
+                                  <CategoryIcon value={category.emoji} iconClassName="text-sm text-neutral-900" />
                                 </span>
                               ) : category.image ? (
                                 <Image src={category.image} alt={category.title} width={32} height={32} className="h-8 w-8 shrink-0 rounded-full object-cover" />

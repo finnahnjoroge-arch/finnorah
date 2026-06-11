@@ -5,10 +5,12 @@ export async function GET() {
   try {
     const db = await connectDB();
     const settings = await db.collection("settings").findOne({ storeId: "default" });
-    const defaults = {
+        const defaults = {
       storeName: "ACME Store",
       currency: "KES",
       country: "Kenya",
+      whatsappPhone: "",
+      storePhone: "",
       shippingCost: 200,
       freeShippingThreshold: 5000,
       shippingNote: "",
