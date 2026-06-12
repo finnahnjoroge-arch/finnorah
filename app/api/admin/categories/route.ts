@@ -53,9 +53,10 @@ export async function GET(req: NextRequest) {
             $cond: [ { $ifNull: ["$parentDoc", false] }, { _id: "$parentDoc._id", name: "$parentDoc.name" }, null ]
           },
           children: { $map: { input: "$children", as: "c", in: { _id: "$$c._id", name: "$$c.name" } } },
-          deletedAt: 1,
+                    deletedAt: 1,
           createdAt: 1,
           updatedAt: 1,
+          position: 1,
         }
       }
     ]).toArray();

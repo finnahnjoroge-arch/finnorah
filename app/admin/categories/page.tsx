@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { CategoryIcon, getPastedIconValue } from "@/components/category-icon";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -153,6 +153,7 @@ const emptyForm = {
   image: "",
   emoji: "",
   parent: "none",
+  position: "",
 };
 
 export default function CategoriesPage() {
@@ -304,7 +305,7 @@ export default function CategoriesPage() {
   const handleSubmit = async () => {
     const url = editingId ? `/api/admin/categories/${editingId}` : "/api/admin/categories";
 
-    const res = await fetch(url, {
+        const res = await fetch(url, {
       method: editingId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -312,6 +313,7 @@ export default function CategoriesPage() {
         image: form.image.trim(),
         emoji: form.emoji.trim(),
         parent: form.parent === "none" ? null : form.parent,
+        position: form.position ? Number(form.position) : null,
       }),
     });
 
@@ -329,13 +331,14 @@ export default function CategoriesPage() {
   setEditingId(cat._id);
   setEditingName(cat.name);
   setSlugManuallyEdited(true);
-  setForm({
+    setForm({
   name: cat.name,
   slug: cat.slug,
   description: cat.description || "",
   image: cat.image || "",
   emoji: cat.emoji || "",
   parent: cat.parent?._id?.toString() || "none",
+  position: cat.position ?? "",
   });
   setModalOpen(true);
   };
@@ -401,6 +404,7 @@ export default function CategoriesPage() {
         </div>
       </td>
       <td className="px-4 py-3 text-neutral-500">{cat.slug}</td>
+      <td className="px-4 py-3">{cat.position ?? "-"}</td>
       <td className="px-4 py-3">{cat.parent?.name || "-"}</td>
       <td className="px-4 py-3 text-right">
         <div className="flex justify-end gap-2">
@@ -491,12 +495,21 @@ export default function CategoriesPage() {
               options={categories.filter((c) => c._id !== editingId)}
             />
           </div>
-          <div>
+                    <div>
             <Label>Description</Label>
             <Input
               value={form.description}
               onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
               placeholder="Optional description"
+            />
+          </div>
+                    <div className="lg:col-span-2">
+            <Label>Position</Label>
+            <Input
+              type="number"
+              value={form.position}
+              onChange={(e) => setForm((p) => ({ ...p, position: e.target.value }))}
+              placeholder="1, 2, 3… lower = first"
             />
           </div>
           <div className="lg:col-span-2">
@@ -577,6 +590,7 @@ export default function CategoriesPage() {
                 <th className="px-4 py-3 text-left font-medium">Preview</th>
                 <th className="px-4 py-3 text-left font-medium">Name</th>
                 <th className="px-4 py-3 text-left font-medium dark:text-white">Slug</th>
+                                <th className="px-4 py-3 text-left font-medium dark:text-white">Pos</th>
                 <th className="px-4 py-3 text-left font-medium dark:text-white">Parent</th>
                 <th className="px-4 py-3 text-right font-medium dark:text-white">Actions</th>
               </tr>
@@ -585,9 +599,10 @@ export default function CategoriesPage() {
               {loading ? (
                 Array.from({ length: 3 }).map((_, i) => (
                   <tr key={i}>
-                    <td className="px-4 py-3"><Skeleton className="h-10 w-10 rounded-full" /></td>
+                                        <td className="px-4 py-3"><Skeleton className="h-10 w-10 rounded-full" /></td>
                     <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
                     <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
+                    <td className="px-4 py-3"><Skeleton className="h-4 w-8" /></td>
                     <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
                     <td className="px-4 py-3"><Skeleton className="ml-auto h-4 w-16" /></td>
                   </tr>
@@ -597,7 +612,7 @@ export default function CategoriesPage() {
               )}
               {!loading && categories.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
+                  <td colSpan={6} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No categories found
                   </td>
                 </tr>

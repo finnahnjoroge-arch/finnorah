@@ -488,18 +488,20 @@ export default function ProductForm({ productId }: { productId?: string }) {
                           key={c._id}
                           type="button"
                           onMouseDown={(e) => {
-                            e.preventDefault();
-                            setForm((p) => {
-                              const current = Array.isArray(p.categories) ? [...p.categories] : [];
-                              const idx = current.indexOf(c._id);
-                              if (idx >= 0) {
-                                current.splice(idx, 1);
-                              } else {
-                                current.push(c._id);
-                              }
-                              return { ...p, categories: current };
-                            });
-                          }}
+                                                      e.preventDefault();
+                                                      setForm((p) => {
+                                                        const current = Array.isArray(p.categories) ? [...p.categories] : [];
+                                                        const idx = current.indexOf(c._id);
+                                                        if (idx >= 0) {
+                                                          current.splice(idx, 1);
+                                                        } else {
+                                                          current.push(c._id);
+                                                        }
+                                                        return { ...p, categories: current };
+                                                      });
+                                                      setCategoryOpen(false);
+                                                      setCategorySearch("");
+                                                    }}
                           className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
                             (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
                               ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
@@ -657,18 +659,20 @@ export default function ProductForm({ productId }: { productId?: string }) {
                           key={c._id}
                           type="button"
                           onMouseDown={(e) => {
-                            e.preventDefault();
-                            setForm((p) => {
-                              const current = Array.isArray(p.categories) ? [...p.categories] : [];
-                              const idx = current.indexOf(c._id);
-                              if (idx >= 0) {
-                                current.splice(idx, 1);
-                              } else {
-                                current.push(c._id);
-                              }
-                              return { ...p, categories: current };
-                            });
-                          }}
+                                                      e.preventDefault();
+                                                      setForm((p) => {
+                                                        const current = Array.isArray(p.categories) ? [...p.categories] : [];
+                                                        const idx = current.indexOf(c._id);
+                                                        if (idx >= 0) {
+                                                          current.splice(idx, 1);
+                                                        } else {
+                                                          current.push(c._id);
+                                                        }
+                                                        return { ...p, categories: current };
+                                                      });
+                                                      setCategoryOpen(false);
+                                                      setCategorySearch("");
+                                                    }}
                           className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
                             (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
                               ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"

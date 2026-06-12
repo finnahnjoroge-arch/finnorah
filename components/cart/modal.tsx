@@ -25,20 +25,22 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
   const pathname = usePathname();
-  const handleCheckout = () => {
-    if (cart?.lines.length) {
-      trackInitiateCheckout({
-        content_ids: cart.lines
-          .map((item) => item.merchandise.id || item.merchandise.product.id)
-          .filter(Boolean),
-        content_type: "product",
-        value: Number(cart.cost.totalAmount.amount),
-        currency: cart.cost.totalAmount.currencyCode,
-        num_items: cart.totalQuantity,
-      });
-    }
-
+    const handleCheckout = () => {
     closeCart();
+    // Fire pixel after navigation starts to avoid blocking
+    if (cart?.lines.length) {
+      setTimeout(() => {
+        trackInitiateCheckout({
+          content_ids: cart.lines
+            .map((item) => item.merchandise.id || item.merchandise.product.id)
+            .filter(Boolean),
+          content_type: "product",
+          value: Number(cart.cost.totalAmount.amount),
+          currency: cart.cost.totalAmount.currencyCode,
+          num_items: cart.totalQuantity,
+        });
+      }, 0);
+    }
   };
 
   useEffect(() => {

@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
+            const result = await signIn("credentials", {
       email,
       password,
       redirect: false,

@@ -87,7 +87,7 @@ export function Navbar({
 
         {/* Mobile search */}
         {!isProductPage && !isCheckout && (
-          <div className="block md:hidden">
+                    <div className="block md:hidden pb-2">
             <Suspense fallback={<SearchSkeleton />}>
               <Search />
             </Suspense>

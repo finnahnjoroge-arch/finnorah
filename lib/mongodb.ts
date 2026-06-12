@@ -18,7 +18,7 @@ export async function connectDB(): Promise<Db> {
   if (clientPromise) {
     await clientPromise;
   }
-  return client!.db(MONGODB_DB);
+    return client!.db(MONGODB_DB);
 }
 
 export async function disconnectDB() {
@@ -27,3 +27,4 @@ export async function disconnectDB() {
     client = null;
   }
 }
+

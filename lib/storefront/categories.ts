@@ -22,7 +22,7 @@ export async function getAllCategories() {
 
   // Aggregate so we can include children for each category
   const docs = await db.collection("categories").aggregate([
-    { $sort: { name: 1 } },
+    { $sort: { position: 1, name: 1 } },
     {
       $lookup: {
         from: "categories",

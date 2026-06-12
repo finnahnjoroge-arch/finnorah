@@ -32,15 +32,9 @@ const Label = ({
       <h3 className="line-clamp-2 text-sm font-semibold leading-tight text-neutral-800 sm:text-base">
         {title}
       </h3>
-      {/* Price row */}
-      <div className="mt-1 flex items-center gap-2">
-        <Price
-          className="text-base font-bold text-blue-600 sm:text-lg"
-          amount={amountMin}
-          prefix={isRangePrice ? "From " : ""}
-          currencyCode={currencyCode}
-        />
-                {hasComparePrice && (
+            {/* Price row */}
+      <div className="mt-1 flex flex-col gap-0">
+        {hasComparePrice && (
           <span className="text-xs text-neutral-400 line-through sm:text-sm">
             <Price
               className="text-xs text-neutral-400 line-through sm:text-sm"
@@ -49,6 +43,12 @@ const Label = ({
             />
           </span>
         )}
+        <Price
+          className="text-base font-bold text-blue-600 sm:text-lg"
+          amount={amountMin}
+          prefix={isRangePrice ? "From " : ""}
+          currencyCode={currencyCode}
+        />
       </div>
       {actions && (
         <div className="mt-2 -mx-3 flex items-stretch divide-x divide-white/30 overflow-hidden rounded-b-2xl sm:-mx-4">

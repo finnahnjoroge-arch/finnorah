@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -86,7 +86,7 @@ export default function CategorySections({ categories, initialData }: CategorySe
                     <h2 className="truncate text-base font-bold md:text-2xl flex items-center gap-2">
                       {cat.name}
                       {cat.children && cat.children.length > 0 && (
-                        <span className="hidden md:inline-flex items-center justify-center rounded-sm bg-white/20 px-1 py-0.5 text-xs font-medium">{cat.children.length} ▸</span>
+                        <span className="hidden md:inline-flex items-center justify-center rounded-sm bg-white/20 px-1 py-0.5 text-xs font-medium">{cat.children.length} Γû╕</span>
                       )}
                     </h2>
 
