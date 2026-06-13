@@ -1,0 +1,26 @@
+"use client";
+
+import { ThemeProvider } from "next-themes";
+import { ReactNode } from "react";
+
+export function ThemeClient({
+  children,
+  forcedTheme = "light",
+  defaultTheme = "light",
+}: {
+  children: ReactNode;
+  forcedTheme?: string;
+  defaultTheme?: string;
+}) {
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme={defaultTheme}
+      forcedTheme={forcedTheme}
+      enableSystem={false}
+      injectScript={false}
+    >
+      {children}
+    </ThemeProvider>
+  );
+}
